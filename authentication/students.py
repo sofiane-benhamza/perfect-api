@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from .models import UserStudent
+
+from authentication.models import UserStudent
 
 def student_create(request):
     if request.method == 'POST':

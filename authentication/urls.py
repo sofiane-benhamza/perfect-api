@@ -19,23 +19,23 @@ urlpatterns = [
         path('update/', professor_update, name='professor_update'),
         path('delete/', professor_delete, name='professor_delete'),
     ])),
-    path('diploma/', include([
-        path('create/', diploma_create, name='diploma_create'),
-        path('read/', diploma_read, name='diploma_read'),
-        path('update/', diploma_update, name='diploma_update'),
-        path('delete/', diploma_delete, name='diploma_delete'),
-    ])),
-    path('review/', include([
-        path('create/', review_create, name='review_create'),
-        path('read/', review_read, name='review_read'),
-        path('update/', review_update, name='review_update'),
-        path('delete/', review_delete, name='review_delete'),
-    ])),
-    path('experience/', include([
-        path('create/', experience_create, name='experience_create'),
-        path('read/', experience_read, name='experience_read'),
-        path('update/', experience_update, name='experience_update'),
-        path('delete/', experience_delete, name='experience_delete'),
-    ])),
+     path('diploma/', include([
+         path('create/', diploma_create, name='diploma_create'),
+         path('read/', diploma_read, name='diploma_read'),
+         path('update/', diploma_update, name='diploma_update'),
+         path('delete/', diploma_delete, name='diploma_delete'),
+     ])),
+     path('review/', include([
+         path('create/', review_create, name='review_create'),
+         path('read/', review_read, name='review_read'),
+         path('update/', review_update, name='review_update'),
+         path('delete/', review_delete, name='review_delete'),
+     ])),
+     path('experience/', include([
+         path('create/', experience_create, name='experience_create'),
+         path('read/', experience_read, name='experience_read'),
+         path('update/', experience_update, name='experience_update'),
+         path('delete/', experience_delete, name='experience_delete'),
+     ])),
 ]
 

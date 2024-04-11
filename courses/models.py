@@ -1,4 +1,5 @@
 from django.db import models
+from authentication.models import UserStudent
 
 class Courses(models.Model):
     name = models.CharField(max_length=64)
