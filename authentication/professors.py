@@ -13,7 +13,7 @@ def professor_create(request):
         review_number = data.get('review_number')
         review_score = data.get('review_score')
         is_male = data.get('isMale')
-
+        
         if name and password and email and phone and address and speciality and review_number and review_score and is_male:
             user_prof = UserProf.objects.create(
                 name=name,

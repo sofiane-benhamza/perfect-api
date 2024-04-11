@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-
 from authentication.models import Diploma
 
 def diploma_create(request):

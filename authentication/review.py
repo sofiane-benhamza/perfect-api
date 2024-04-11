@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from  authentication.models import ReviewsProf, UserProf
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def  review_create(request):
     if request.method == 'POST':
         given_score = request.POST.get('given_score')
