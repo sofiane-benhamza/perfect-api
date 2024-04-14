@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-
 from authentication.models import UserStudent
 
 def student_create(request):
@@ -14,6 +13,7 @@ def student_create(request):
         level = data.get('level')
 
         if name and password and email and phone and address and is_male and level:
+            
             user_student = UserStudent.objects.create(
                 name=name,
                 password=password,

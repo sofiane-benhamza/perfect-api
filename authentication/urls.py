@@ -13,18 +13,19 @@ urlpatterns = [
         path('update/', student_update, name='student_update'),
         path('delete/', student_delete, name='student_delete'),
     ])),
-    path('professors/', include([
-        path('create/', professor_create, name='professor_create'),
-        path('read/', professor_read, name='professor_read'),
-        path('update/', professor_update, name='professor_update'),
-        path('delete/', professor_delete, name='professor_delete'),
-    ])),
-     path('diploma/', include([
-         path('create/', diploma_create, name='diploma_create'),
-         path('read/', diploma_read, name='diploma_read'),
-         path('update/', diploma_update, name='diploma_update'),
-         path('delete/', diploma_delete, name='diploma_delete'),
+     path('professors/', include([
+         path('create/', professor_create, name='professor_create'),
+         path('read/', professor_read, name='professor_read'),
+         path('update/', professor_update, name='professor_update'),
+         path('delete/', professor_delete, name='professor_delete'),
      ])),
+    
+      path('diploma/', include([
+          path('create/', diploma_create, name='diploma_create'),
+          path('read/', diploma_read, name='diploma_read'),
+          path('update/', diploma_update, name='diploma_update'),
+          path('delete/', diploma_delete, name='diploma_delete'),
+      ])),
      path('review/', include([
          path('create/', review_create, name='review_create'),
          path('read/', review_read, name='review_read'),

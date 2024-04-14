@@ -1,35 +1,41 @@
 from django.http import JsonResponse
 from authentication.models import UserProf
+import json
 
 def professor_create(request):
-    if request.method == 'POST':
-        data = request.POST
-        name = data.get('name')
-        password = data.get('password')
-        email = data.get('email')
-        phone = data.get('phone')
-        address = data.get('address')
-        speciality = data.get('speciality')
-        review_number = data.get('review_number')
-        review_score = data.get('review_score')
-        is_male = data.get('isMale')
-        
-        if name and password and email and phone and address and speciality and review_number and review_score and is_male:
+      if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  
             user_prof = UserProf.objects.create(
-                name=name,
-                password=password,
-                email=email,
-                phone=phone,
-                address=address,
-                speciality=speciality,
-                review_number=review_number,
-                review_score=review_score,
-                isMale=is_male
+                name=data['name'],
+                password=data['password'],
+                etablissement=data.get('etablissement', ''),  
+                email=data['email'],
+                phone=data['phone'],
+                address=data['address'],
+                speciality=data['speciality'],
+                review_number=data['review_number'],
+                review_score=data['review_score'],
+                isMale=data['isMale']
             )
-            return JsonResponse({'message': 'Professor created successfully'})
-        else:
+            user_prof_json = {
+                'id': user_prof.id,
+                'name': user_prof.name,
+                'etablissement': user_prof.etablissement,
+                'email': user_prof.email,
+                'phone': user_prof.phone,
+                'address': user_prof.address,
+                'speciality': user_prof.speciality,
+                'review_number': user_prof.review_number,
+                'review_score': user_prof.review_score,
+                'isMale': user_prof.isMale
+            }
+            return JsonResponse({'message': 'Professor created successfully', 'user_prof': user_prof_json})
+        except KeyError:
             return JsonResponse({'error': 'Missing required fields'}, status=400)
-    else:
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+      else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
     
     
@@ -42,6 +48,7 @@ def professor_read(request):
                 serialized_professor = {
                     'name': professor.name,
                     'email': professor.email,
+                    'etablissement': professor.etablissement,
                     'phone': professor.phone,
                     'address': professor.address,
                     'speciality': professor.speciality,
@@ -57,40 +64,54 @@ def professor_read(request):
      else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
     
-    
 def professor_update(request):
-    
     if request.method == 'PUT':
-        data = request.POST
-        professor_id = data.get('id')
         try:
-            professor = UserProf.objects.get(pk=professor_id)
-            professor.name = data.get('name')
-            professor.password = data.get('password')
-            professor.email = data.get('email')
-            professor.phone = data.get('phone')
-            professor.address = data.get('address')
-            professor.speciality = data.get('speciality')
-            professor.review_number = data.get('review_number')
-            professor.review_score = data.get('review_score')
-            professor.isMale = data.get('isMale')
-            professor.save()
-            return JsonResponse({'message': 'Professor updated successfully'})
+            data = json.loads(request.body)
+            professor_id = data.get('id')
+            if professor_id is not None:
+                professor = UserProf.objects.get(pk=professor_id)
+                
+                professor.name = data.get('name')
+                professor.password = data.get('password')
+                professor.email = data.get('email')
+                professor.etablissement = data.get('etablissement')
+                professor.phone = data.get('phone')
+                professor.address = data.get('address')
+                professor.speciality = data.get('speciality')
+                professor.review_number = data.get('review_number')
+                professor.review_score = data.get('review_score')
+                professor.isMale = data.get('isMale')
+
+                
+                professor.save()
+                return JsonResponse({'message': 'Professor updated successfully'})
+            else:
+                return JsonResponse({'error': 'Professor ID is missing'}, status=400)
         except UserProf.DoesNotExist:
             return JsonResponse({'error': 'Professor not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405) 
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
       
     
 def professor_delete(request):
     if request.method == 'DELETE':
-        data = request.POST
-        professor_id = data.get('id')
         try:
-            professor = UserProf.objects.get(pk=professor_id)
-            professor.delete()
-            return JsonResponse({'message': 'Professor deleted successfully'})
+            data = json.loads(request.body)
+            professor_id = data.get('id')
+
+            if professor_id is not None:
+                professor = UserProf.objects.get(pk=professor_id)
+                professor.delete()
+                return JsonResponse({'message': 'Professor deleted successfully'})
+            else:
+                return JsonResponse({'error': 'Professor ID is missing'}, status=400)
         except UserProf.DoesNotExist:
             return JsonResponse({'error': 'Professor not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
