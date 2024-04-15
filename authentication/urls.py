@@ -8,11 +8,12 @@ from .experience import experience_create, experience_read, experience_update, e
 
 urlpatterns = [
     path('students/', include([
-        path('create/', student_create, name='student_create'),
-        path('read/', student_read, name='student_read'),
-        path('update/', student_update, name='student_update'),
-        path('delete/', student_delete, name='student_delete'),
+        path('create/', student_create, name='student_create'),    # POST
+        path('read/', student_read, name='student_read'),          # GET
+        path('update/', student_update, name='student_update'),    # PUT
+        path('delete/', student_delete, name='student_delete'),    # DELETE
     ])),
+
      path('professors/', include([
          path('create/', professor_create, name='professor_create'),
          path('read/', professor_read, name='professor_read'),
@@ -26,12 +27,14 @@ urlpatterns = [
           path('update/', diploma_update, name='diploma_update'),
           path('delete/', diploma_delete, name='diploma_delete'),
       ])),
+      
      path('review/', include([
          path('create/', review_create, name='review_create'),
          path('read/', review_read, name='review_read'),
          path('update/', review_update, name='review_update'),
          path('delete/', review_delete, name='review_delete'),
      ])),
+
      path('experience/', include([
          path('create/', experience_create, name='experience_create'),
          path('read/', experience_read, name='experience_read'),

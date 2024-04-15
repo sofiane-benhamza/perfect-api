@@ -1,9 +1,11 @@
 from django.http import JsonResponse
 from authentication.models import UserStudent
+from rest_framework.decorators import api_view
 
+@api_view(['POST'])
 def student_create(request):
     if request.method == 'POST':
-        data = request.POST
+        data = request.data
         name = data.get('name')
         password = data.get('password')
         email = data.get('email')
@@ -29,6 +31,7 @@ def student_create(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+@api_view(['GET'])
 def student_read(request):
     if request.method == 'GET':
         email = request.GET.get('email')
@@ -51,16 +54,14 @@ def student_read(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-
+@api_view(['PUT'])
 def student_update(request):
     if request.method == 'PUT':
         data = request.POST
-        student_id = data.get('id')
+        student_id = data.get('email')
         try:
-            student = UserStudent.objects.get(pk=student_id)
+            student= UserStudent.objects.get(id=student_id)
             student.name = data.get('name')
-            student.password = data.get('password')
-            student.email = data.get('email')
             student.phone = data.get('phone')
             student.address = data.get('address')
             student.is_male = data.get('isMale')
@@ -72,12 +73,13 @@ def student_update(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+@api_view(['DELETE'])
 def student_delete(request):
     if request.method == 'DELETE':
         data = request.POST
-        student_id = data.get('id')
+        student_id = data.get('email')
         try:
-            student = UserStudent.objects.get(pk=student_id)
+            student = UserStudent.objects.get(email=student_id)
             student.delete()
             return JsonResponse({'message': 'Student deleted successfully'})
         except UserStudent.DoesNotExist:

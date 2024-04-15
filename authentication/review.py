@@ -1,21 +1,24 @@
 from django.http import JsonResponse
 import json
-from  authentication.models import ReviewsProf, UserProf
+from  authentication.models import ReviewsProf, UserProf, UserStudent
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.decorators import api_view
 
-
+@api_view(['POST'])
 def review_create(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            user_prof_id = data.get('user_prof_id')
+            data = request.data
+            scorer_email = data.get('scorer_email') 
+            user_prof_email = data.get('user_prof_email')
             given_score = data.get('given_score')
             date = data.get('date')
 
-            user_prof = UserProf.objects.get(pk=user_prof_id)
-            review = ReviewsProf.objects.create(user_prof=user_prof, given_score=given_score, date=date)
+            user_prof = UserProf.objects.get(email=user_prof_email)
+            scorer = UserStudent.objects.get(email=scorer_email)
+            review = ReviewsProf.objects.create(user_prof=user_prof,scorer = scorer, given_score=given_score, date=date)
 
-            return JsonResponse({'message': 'Review created successfully', 'review_id': review.id})
+            return JsonResponse({'message': 'Review created successfully'}, status=200)
         except KeyError:
             return JsonResponse({'error': 'Missing required fields'}, status=400)
         except ObjectDoesNotExist:
@@ -25,34 +28,33 @@ def review_create(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+@api_view(['GET'])
 def review_read(request, review_id):
-    if request.method == 'GET':
+    if request.method == 'GET':   
         try:
-            review = ReviewsProf.objects.get(pk=review_id)
-            data = {
-                'id': review.id,
-                'given_score': review.given_score,
-                'date': review.date,
-                'user_prof_id': review.user_prof_id
-            }
-            return JsonResponse({'review': data})
+            email = request.data.get("email")
+            reviews = ReviewsProf.objects.get(email=email)
+            return JsonResponse({reviews}, status=200)
         except ReviewsProf.DoesNotExist:
-            return JsonResponse({'error': 'Review not found'}, status=404)
+            return JsonResponse({'error': 'Reviews not found'}, status=404)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-def review_update(request, review_id):
+@api_view(['PUT'])
+def review_update(request):
     if request.method =='PUT':
         try:
-            data = json.loads(request.body)
+            data = request.data
+            prof_email = data.get('user_prof_email')
+            scorer_email = data.get('scorer_email')
             given_score = data.get('given_score')
             date = data.get('date')
-            user_prof_id = data.get('user_prof_id')
 
-            review = ReviewsProf.objects.get(pk=review_id)
+            scorer = UserStudent.objects.get(email = scorer_email)
+
+            review = ReviewsProf.objects.get(user_prof=prof_email, scorer=scorer)
             review.given_score = given_score
             review.date = date
-            review.user_prof_id = user_prof_id
             review.save()
 
             return JsonResponse({'message': 'Review updated successfully'})
@@ -63,10 +65,14 @@ def review_update(request, review_id):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+
+@api_view(['DELETE'])
 def review_delete(request, review_id):
     if request.method == 'DELETE':
         try:
-            review = ReviewsProf.objects.get(pk=review_id)
+            scorer_email = request.data.get("scorer_email")
+            scorer = UserStudent.objects.get(email=scorer_email)
+            review = ReviewsProf.objects.get(scorer=scorer)
             review.delete()
 
             return JsonResponse({'message': 'Review deleted successfully'})
