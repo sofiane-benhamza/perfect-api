@@ -9,6 +9,6 @@ import authentication
 urlpatterns = [
     path('users/', include('authentication.urls')),
     #path('centers/', include('centers.urls')),
-    #path('courses/', include('courses.urls')),
+    path('courses/', include('courses.urls')),
     #path('payments/', include('payments.urls')),
 ]

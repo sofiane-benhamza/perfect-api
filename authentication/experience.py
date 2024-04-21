@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 import json
 from authentication.models import Experience, UserProf
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view 
 
 @api_view(['POST'])
 def experience_create(request):
