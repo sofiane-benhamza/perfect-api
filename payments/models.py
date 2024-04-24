@@ -5,3 +5,6 @@ class Payments(models.Model):
     date = models.DateField()
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     user_student = models.ForeignKey(UserStudent, on_delete=models.CASCADE)
+
+    class Meta:
+      unique_together = ('user_student', 'course',)
