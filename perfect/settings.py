@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles', 
     # Apps :
-    "authentication",
+    "app_auth",
     "courses",
     "centers",
     "payments"
