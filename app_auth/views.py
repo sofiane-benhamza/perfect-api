@@ -24,7 +24,7 @@ def login(request):
 
     user = authenticate(username=username, password=password)
     if user:
-        token, _ = Token.objects.get_or_create(user=user)
+        token = Token.objects.get_or_create(user=user)
         # role = determine_user_role(user) 
         return Response({'token': token.key})
     else:
